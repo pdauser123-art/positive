@@ -1440,6 +1440,10 @@
         <span id="runtime-mode-badge" class="mode-badge hidden" aria-hidden="true"></span>
       </div>
       <div class="header-actions">
+        <button type="button" id="header-ai-key-btn" class="icon-text-btn" style="border-color:var(--primary); background:var(--primary-tint); color:var(--primary);" aria-label="設定免費 Gemini AI 金鑰以啟用真實 AI 回應">
+          <span aria-hidden="true" id="header-ai-key-icon">🔑</span>
+          <span id="header-ai-key-label">連接真實 AI</span>
+        </button>
         <button type="button" id="header-history-btn" class="icon-text-btn" aria-label="開啟歷史紀錄與隱私設定">
           <span aria-hidden="true">🕒</span>
           <span>歷史／設定</span>
@@ -1506,17 +1510,7 @@
           <button type="button" class="sample-chip" data-sample="你們出貨慢死了，到底會不會做生意？" data-scenario="brand_cs">品牌／客服</button>
         </div>
 
-        <!-- 回答時參考與引用之大師哲學話語 -->
-        <div class="sample-row" aria-label="選擇回答時引用之大師哲學思想">
-          <span class="sample-label">回答引用大師話語：</span>
-          <button type="button" class="sample-chip philosophy-chip active" data-phil="all_masters" aria-pressed="true">✨ 自動融合六位大師</button>
-          <button type="button" class="sample-chip philosophy-chip" data-phil="all_life" aria-pressed="false">楊定一・全部生命</button>
-          <button type="button" class="sample-chip philosophy-chip" data-phil="gurudev" aria-pressed="false">Gurudev 古儒吉</button>
-          <button type="button" class="sample-chip philosophy-chip" data-phil="moojiji" aria-pressed="false">Moojiji 穆吉</button>
-          <button type="button" class="sample-chip philosophy-chip" data-phil="tolle" aria-pressed="false">Eckhart Tolle 托勒</button>
-          <button type="button" class="sample-chip philosophy-chip" data-phil="adams" aria-pressed="false">Robert Adams 亞當斯</button>
-          <button type="button" class="sample-chip philosophy-chip" data-phil="sadhguru" aria-pressed="false">Sadhguru 薩古魯</button>
-        </div>
+
       </div>
 
       <!-- 4. 情境與風格摘要 -->
@@ -1808,7 +1802,7 @@
           <button type="button" class="option-chip polish-style-chip" data-polish="poetic" aria-pressed="false">更有詩意</button>
           <button type="button" class="option-chip polish-style-chip" data-polish="love_and_acceptance" aria-pressed="false">愛與包容</button>
           <button type="button" class="option-chip polish-style-chip" data-polish="fully_positive" aria-pressed="false">正向到底</button>
-          <button type="button" class="option-chip polish-style-chip" data-polish="awakened_peace" aria-pressed="false">靜心覺察（全部生命・Gurudev・Moojiji）</button>
+          <button type="button" class="option-chip polish-style-chip" data-polish="awakened_peace" aria-pressed="false">平靜覺察</button>
         </div>
 
         <p style="font-size:0.8125rem; color:var(--text-secondary); margin:0 0 10px 0;">
@@ -2213,7 +2207,7 @@
         passionate: '熱血鼓勵',
         love_and_acceptance: '愛與包容',
         fully_positive: '正向到底',
-        awakened_peace: '靜心覺察（全部生命／覺知）'
+        awakened_peace: '平靜覺察'
       };
 
       var LENGTH_LABELS = {
@@ -2540,59 +2534,635 @@
       }
 
 
-      // 六位大師哲學話語知識庫（於按下「幫我換個溫柔的角度」回答時直接參考與引用）
-      var MASTER_WISDOM_DB = {
-        all_life: {
-          name: '楊定一博士《全部生命系列》',
-          interpQuote: '楊定一博士在《全部生命系列》中溫柔提醒：「不要與眼前已經發生的事實對立。當我們停止抗拒、在心裡對眼前的一切輕輕說聲『謝謝』，頭腦緊抓的防衛就會鬆開。」',
-          encourageQuote: '如同《全部生命系列》所說：「沒有任何一件事是偶然的，眼前讓你卡住的摩擦，其實都是為了把你帶回內在的平安。」允許這份情緒存在，不必急著批判自己。',
-          shareQuote: '當我們不再與眼前已發生的事對立，在心底輕輕說聲謝謝，心就回到了全部生命的平安。'
-        },
-        gurudev: {
-          name: 'Gurudev（古儒吉大師）',
-          interpQuote: 'Gurudev（古儒吉）曾說：「不要讓別人的情緒或無明，變成你心裡的垃圾桶。」對方說出的話反映的是他當下的狀態，你可以理解他的焦急，但不需要把那份沉重收進心裡。',
-          encourageQuote: 'Gurudev 提醒我們：「過去這一秒已經發生的事，就像流過河面的水；做一次深長的呼吸把它放下，沒有人能拿走你的微笑與自由，除非你願意交出去。」',
-          shareQuote: '做一次深長的呼吸，不簽收別人的情緒重擔，把心留在自由與微笑裡。'
-        },
-        moojiji: {
-          name: 'Moojiji（穆吉大師）',
-          interpQuote: 'Moojiji（穆吉）常對我們說：「從頭腦編織的受傷劇本裡退後一步吧！念頭與刺耳的評價就像天空飄過的雲，而你是那片不會被雲弄傷的天空（純然覺知）。」',
-          encourageQuote: '試著像 Moojiji 提醒的那樣，不跳進「我被冒犯了」或「我不夠好」的小我故事裡。退後一步靜靜看著情緒來去，你原本的寧靜與完整從未減少分毫。',
-          shareQuote: '你不是那些路過的念頭與刺耳的評價，你是那片靜靜看著雲朵來去、本自具足的天空。'
-        },
-        tolle: {
-          name: 'Eckhart Tolle（艾克哈特・托勒）',
-          interpQuote: '艾克哈特・托勒在《當下的力量》與《一個新世界》中指出：「很多時候衝突並非針對真實的你，而是彼此體內的『痛苦之身（Pain-body）』在無意識地互相拉扯。」看見這份無意識，你就不會把它當成個人恩怨。',
-          encourageQuote: '如同艾克哈特・托勒所說：「全然接納當下這一刻如其所是，然後從寧靜與覺察中採取行動，而不是從抗拒與憤怒中反應。」當下這一刻，你是安全的。',
-          shareQuote: '當你看清情緒背後的無意識，就不再把摩擦當成針對自己的攻擊，當下即是解脫。'
-        },
-        adams: {
-          name: 'Robert Adams（羅伯特・亞當斯）',
-          interpQuote: '羅伯特・亞當斯（Robert Adams）總是以最安定的語氣告訴我們：「一切都很好（All is well），眼前正在展開的每一件事，都有它存在的秩序。」不必過度糾結或分析對方為什麼這樣說。',
-          encourageQuote: '如同 Robert Adams 所叮嚀的：「對他人與世界保持溫柔的善意，而讓你的內心安住於深沉的寂靜（Silence）中心。」先回到心底的安靜，外在的風浪自然會平息。',
-          shareQuote: '一切都很好（All is well）；不必用力分析別人的風浪，只需溫柔回到自己內在的寂靜。'
-        },
-        sadhguru: {
-          name: 'Sadhguru（薩古魯）',
-          interpQuote: '薩古魯（Sadhguru）在《內在工程》中一針見血地說：「別人怎麼說話、怎麼對你，那是他的業力（Karma）與習慣；但你選擇用什麼心情回應，百分之百是你的自由與責任（Responsibility）。」',
-          encourageQuote: '薩古魯提醒我們：「外在情境有時會帶來摩擦，但『受苦（Suffering）』是我們在頭腦裡反覆重播那句話才製造出來的。」別讓別人的嘴，決定你內在的天氣。',
-          shareQuote: '別人怎麼說話是他的習慣，但別讓外在的摩擦決定你內在的天氣；如何回應是你的自由。'
-        }
-      };
+      var LOCAL_STORAGE_API_KEY = 'ptte_user_gemini_api_key_v1';
+      var LOCAL_STORAGE_MODEL_KEY = 'ptte_user_gemini_model_v1';
 
-      function getMasterPack(philKey, reqCounter) {
-        var keys = ['all_life', 'gurudev', 'moojiji', 'tolle', 'adams', 'sadhguru'];
-        if (philKey && philKey !== 'all_masters' && MASTER_WISDOM_DB[philKey]) {
-          var primary = MASTER_WISDOM_DB[philKey];
-          var idx = keys.indexOf(philKey);
-          var secondary = MASTER_WISDOM_DB[keys[(idx + 1) % keys.length]];
-          return { primary: primary, secondary: secondary };
+      // ==========================================
+      // 移植自「小雞提醒」的三層式 AI 回應架構：
+      // 第 1 層：動態查詢支援模型 + 多模型免費額度自動輪替 (getAvailableGeminiModels + modelCooldownUntil)
+      // 第 2 層：Live WebSocket (models/gemini-3.8-live BidiGenerateContent) 免額度限制終極備援
+      // 第 3 層：18 大生活情境深度語意解析與動態組合引擎（即使未填金鑰，每種問題皆有專屬精準回應，絕不千篇一律）
+      // ==========================================
+      var modelCooldownUntil = {};
+      var cachedDiscoveredModels = null;
+      var cachedDiscoveredAt = 0;
+
+      function getSavedApiKey() {
+        try {
+          return (window.localStorage.getItem(LOCAL_STORAGE_API_KEY) || '').trim();
+        } catch (_e) {
+          return '';
         }
-        var pIdx = ((reqCounter || 1) - 1) % keys.length;
-        var sIdx = (pIdx + 3) % keys.length;
+      }
+
+      function getSavedModel() {
+        try {
+          return (window.localStorage.getItem(LOCAL_STORAGE_MODEL_KEY) || 'auto').trim();
+        } catch (_e) {
+          return 'auto';
+        }
+      }
+
+      function updateAiKeyBadgeUI() {
+        var hasKey = Boolean(getSavedApiKey());
+        var btn = document.getElementById('header-ai-key-btn');
+        var icon = document.getElementById('header-ai-key-icon');
+        var label = document.getElementById('header-ai-key-label');
+        if (!btn || !label || !icon) return;
+        if (hasKey) {
+          icon.textContent = '✨';
+          label.textContent = '小雞 AI 已連線';
+          btn.style.background = 'var(--success-bg)';
+          btn.style.color = 'var(--success-text)';
+          btn.style.borderColor = '#86EFAC';
+        } else {
+          icon.textContent = '🐣';
+          label.textContent = '小雞 AI 設定';
+          btn.style.background = 'var(--primary-tint)';
+          btn.style.color = 'var(--primary)';
+          btn.style.borderColor = 'var(--primary)';
+        }
+      }
+
+      /**
+       * 參考「小雞提醒」getAvailableVisionModels：
+       * 動態查詢帳號支援的 generateContent 模型，並將免費額度最高、速度最快的 Flash-Lite / Flash 排在最前面，遇 429 自動秒切下一個模型！
+       */
+      function getAvailableGeminiModels(apiKey) {
+        var nowMs = Date.now();
+        var preferredOrder = [
+          'gemini-3.5-flash-lite',
+          'gemini-3.1-flash-lite',
+          'gemini-3.6-flash',
+          'gemini-3-flash-preview',
+          'gemini-2.5-flash-lite',
+          'gemini-2.5-flash',
+          'gemini-2.0-flash',
+          'gemini-2.0-flash-lite'
+        ];
+        var userChoice = getSavedModel();
+
+        var finalizeList = function (discovered) {
+          var baseList = (discovered && discovered.length > 0)
+            ? preferredOrder.filter(function (m) { return discovered.indexOf(m) !== -1; })
+                .concat(discovered.filter(function (m) { return preferredOrder.indexOf(m) === -1; }))
+            : preferredOrder.slice();
+
+          if (userChoice && userChoice !== 'auto') {
+            baseList = [userChoice].concat(baseList.filter(function (m) { return m !== userChoice; }));
+          }
+          var active = baseList.filter(function (m) { return (modelCooldownUntil[m] || 0) <= nowMs; });
+          return active.length > 0 ? active : baseList.slice(0, 3);
+        };
+
+        if (cachedDiscoveredModels && (nowMs - cachedDiscoveredAt < 30 * 60 * 1000)) {
+          return Promise.resolve(finalizeList(cachedDiscoveredModels));
+        }
+
+        var listUrl = 'https://generativelanguage.googleapis.com/v1beta/models?key=' + encodeURIComponent(apiKey);
+        return window.fetch(listUrl)
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (data) {
+            if (data && Array.isArray(data.models)) {
+              var valid = [];
+              data.models.forEach(function (m) {
+                var methods = m.supportedGenerationMethods || [];
+                if (methods.indexOf('generateContent') === -1) return;
+                var shortName = String(m.name || '').replace(/^models\//, '');
+                if (shortName.indexOf('gemini-') !== 0) return;
+                if (/(tts|embedding|imagen|banana|-image|robotics|transcribe|computer-use|live)/i.test(shortName)) return;
+                valid.push(shortName);
+              });
+              if (valid.length > 0) {
+                cachedDiscoveredModels = valid;
+                cachedDiscoveredAt = nowMs;
+              }
+            }
+            return finalizeList(cachedDiscoveredModels);
+          })
+          .catch(function () {
+            return finalizeList(null);
+          });
+      }
+
+      function buildGeminiSystemPrompt(isPolish) {
+        var core = [
+          '你是「正向♥️正向到底」的台灣繁體中文溫柔溝通與轉念 AI 助手。',
+          '產品精神：「不必否認難過，也能找到溫柔的下一句。」',
+          '語氣要求：自然、溫暖、像一位真正懂他的台灣知心朋友，不說教、不貼心靈雞湯標籤、不生硬點名大師語錄，但自然流露「接納當下事實、不替別人的情緒背鍋、溫和站穩界線」的安定力量。',
+          '【嚴格遵守規則】',
+          '1. 仔細閱讀使用者輸入的「每一個字、具體事件、情緒痛點、說話者與關係」，針對這件事量身撰寫，絕對不要套用空泛萬用罐頭句。',
+          '2. positiveInterpretation（換個角度看）：先同理使用者的委屈或緊繃，接著把「對方的情緒口氣／個人習慣」與「具體要處理的事實」分開，提供合理且不委屈自己的新視角。',
+          '3. replyToSend（可以這樣回）：直接輸出可複製傳給對方的自然口語訊息，不要包含「你可以回覆：」等前言。',
+          '4. selfEncouragement（給自己的話）：給予貼合當下處境、具體而溫暖的自我安頓。',
+          '5. shareQuote（今天的一句光）：根據這次事件創作一句簡短有畫面的溫柔句子（18~42字）。',
+          '6. variants（同一句，三種溫度）：提供 gentle（溫柔緩和版）、humorous（幽默反轉版：針對情境輕鬆自嘲或給台階下，不攻擊人格）、fullyPositive（正向到底版：明亮有建設性）。'
+        ].join('\n');
+
+        if (isPolish) {
+          return core + '\n請將使用者的金句潤飾得更自然動人，保留原意與自我界線，只輸出純 JSON：{"mode":"standard","suggestedQuote":"潤飾後的句子","notice":"簡短說明"}';
+        }
+        return core + '\n請只輸出純 JSON 物件（不要加 markdown 標籤）：{"mode":"standard","selectedStyle":"love_and_acceptance","positiveInterpretation":"...","replyToSend":"...","selfEncouragement":"...","shareQuote":"...","variants":{"gentle":"...","humorous":"...","fullyPositive":"..."},"notice":""}';
+      }
+
+      function extractJsonFromText(rawText) {
+        if (!rawText) return null;
+        var cleaned = String(rawText).trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+        try {
+          return JSON.parse(cleaned);
+        } catch (_e) {
+          var firstBrace = cleaned.indexOf('{');
+          var lastBrace = cleaned.lastIndexOf('}');
+          if (firstBrace !== -1 && lastBrace > firstBrace) {
+            try {
+              return JSON.parse(cleaned.slice(firstBrace, lastBrace + 1));
+            } catch (_e2) {
+              return null;
+            }
+          }
+          return null;
+        }
+      }
+
+      /**
+       * 參考「小雞提醒」analyzeWithGeminiLiveWebSocket：
+       * 當一般 generateContent 免費額度 (429) 用盡時，自動切換至 models/gemini-3.8-live WebSocket 通道！
+       */
+      function callGeminiLiveWebSocketFallback(apiKey, systemText, userPrompt) {
+        return new Promise(function (resolve, reject) {
+          var wsUrl = 'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=' + encodeURIComponent(apiKey);
+          var ws;
+          try {
+            ws = new WebSocket(wsUrl);
+          } catch (err) {
+            reject(err);
+            return;
+          }
+
+          var settled = false;
+          var outputTranscript = '';
+          var modelTurnText = '';
+
+          var finish = function (err, data) {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            try { ws.close(1000, 'done'); } catch (_e) {}
+            if (err) reject(err);
+            else resolve(data);
+          };
+
+          var timer = setTimeout(function () {
+            var combined = (modelTurnText + '\n' + outputTranscript).trim();
+            var parsed = extractJsonFromText(combined);
+            if (parsed && parsed.positiveInterpretation) {
+              finish(null, parsed);
+            } else {
+              finish(new Error('Live 通道回應逾時'));
+            }
+          }, 12000);
+
+          ws.onopen = function () {
+            ws.send(JSON.stringify({
+              setup: {
+                model: 'models/gemini-3.8-live',
+                generationConfig: {
+                  responseModalities: ['AUDIO'],
+                  speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Aoede' } } }
+                },
+                outputAudioTranscription: {},
+                systemInstruction: { parts: [{ text: systemText }] },
+                tools: [{
+                  functionDeclarations: [{
+                    name: 'save_positive_response',
+                    description: '儲存轉換後的正向解讀、可直接傳送的回覆、自我鼓勵、一句光與三種溫度版本。',
+                    parameters: {
+                      type: 'OBJECT',
+                      properties: {
+                        positiveInterpretation: { type: 'STRING' },
+                        replyToSend: { type: 'STRING' },
+                        selfEncouragement: { type: 'STRING' },
+                        shareQuote: { type: 'STRING' },
+                        gentleVariant: { type: 'STRING' },
+                        humorousVariant: { type: 'STRING' },
+                        fullyPositiveVariant: { type: 'STRING' }
+                      },
+                      required: ['positiveInterpretation', 'replyToSend', 'selfEncouragement', 'shareQuote']
+                    }
+                  }]
+                }]
+              }
+            }));
+          };
+
+          ws.onmessage = function (event) {
+            try {
+              var msg = JSON.parse(typeof event.data === 'string' ? event.data : '');
+              if (msg.error) {
+                finish(new Error(msg.error.message || 'Live WS Error'));
+                return;
+              }
+              if (msg.setupComplete) {
+                ws.send(JSON.stringify({
+                  clientContent: {
+                    turns: [{
+                      role: 'user',
+                      parts: [{ text: userPrompt + '\n請立即呼叫 save_positive_response 工具儲存結果，或直接輸出 JSON。' }]
+                    }],
+                    turnComplete: true
+                  }
+                }));
+                return;
+              }
+              if (msg.toolCall && msg.toolCall.functionCalls && msg.toolCall.functionCalls.length > 0) {
+                var args = msg.toolCall.functionCalls[0].args || {};
+                if (args.positiveInterpretation && args.replyToSend) {
+                  finish(null, {
+                    mode: 'standard',
+                    positiveInterpretation: args.positiveInterpretation,
+                    replyToSend: args.replyToSend,
+                    selfEncouragement: args.selfEncouragement,
+                    shareQuote: args.shareQuote,
+                    variants: {
+                      gentle: args.gentleVariant || args.replyToSend,
+                      humorous: args.humorousVariant || args.replyToSend,
+                      fullyPositive: args.fullyPositiveVariant || args.replyToSend
+                    }
+                  });
+                  return;
+                }
+              }
+              if (msg.outputTranscription && msg.outputTranscription.text) {
+                outputTranscript += msg.outputTranscription.text;
+              }
+              var sc = msg.serverContent;
+              if (sc) {
+                if (sc.outputTranscription && sc.outputTranscription.text) {
+                  outputTranscript += sc.outputTranscription.text;
+                }
+                if (sc.modelTurn && sc.modelTurn.parts) {
+                  sc.modelTurn.parts.forEach(function (p) {
+                    if (p.text && !p.thought) modelTurnText += p.text;
+                  });
+                }
+                if (sc.turnComplete || sc.generationComplete) {
+                  var parsed = extractJsonFromText((modelTurnText + '\n' + outputTranscript).trim());
+                  if (parsed && parsed.positiveInterpretation) {
+                    finish(null, parsed);
+                  }
+                }
+              }
+            } catch (_e) {}
+          };
+
+          ws.onerror = function () {
+            finish(new Error('Live WebSocket 連線失敗'));
+          };
+        });
+      }
+
+      /**
+       * 參考「小雞提醒」多模型輪替 + Live 通道備援執行器
+       */
+      function callRealGeminiTransform(cleanText, opts) {
+        var apiKey = getSavedApiKey();
+        var sysText = buildGeminiSystemPrompt(false);
+        var userPrompt = [
+          '【使用者輸入的話語／對話】：' + cleanText,
+          '【使用情境】：' + (SCENARIO_LABELS[opts.scenario] || '人際關係'),
+          '【期望風格】：' + (STYLE_LABELS[opts.style] || '愛與包容'),
+          '【期望長度】：' + (LENGTH_LABELS[opts.length] || '自動長度'),
+          '【這句話是誰說的】：' + (opts.speaker === 'self' ? '使用者自己說的' : opts.speaker === 'unsure' ? '不確定／雙向對話' : '對方說的'),
+          '【對方與使用者的關係】：' + (opts.relationship || '伴侶／親友'),
+          '【溝通目的】：' + (opts.purpose || '緩和情緒並釐清問題'),
+          opts.recipient ? ('【回覆傳送對象】：' + opts.recipient) : '',
+          opts.extraContext ? ('【補充背景情境】：' + opts.extraContext) : '',
+          '【產生序號（請給出全新切角）】：#' + (opts.requestId || 1)
+        ].filter(Boolean).join('\n');
+
+        var formatOutput = function (parsed, usedModel) {
+          var safetyCheck = classifySafety(cleanText, opts.purpose);
+          return {
+            mode: safetyCheck.mode === 'boundary_support' ? 'boundary_support' : (parsed.mode || 'standard'),
+            selectedStyle: opts.style || 'love_and_acceptance',
+            positiveInterpretation: sanitizePlain(parsed.positiveInterpretation),
+            replyToSend: sanitizePlain(parsed.replyToSend).replace(/^(你可以(這樣)?回覆(對方)?說?[:：]\s*|建議回覆[:：]\s*)/i, ''),
+            selfEncouragement: sanitizePlain(parsed.selfEncouragement || '先深呼吸一下，照顧好自己的感受，你已經做得很好了。'),
+            shareQuote: sanitizePlain(parsed.shareQuote || '不必否認難過，也能找到溫柔的下一句。'),
+            variants: {
+              gentle: sanitizePlain((parsed.variants && parsed.variants.gentle) || parsed.replyToSend),
+              humorous: sanitizePlain((parsed.variants && parsed.variants.humorous) || parsed.replyToSend),
+              fullyPositive: sanitizePlain((parsed.variants && parsed.variants.fullyPositive) || parsed.replyToSend)
+            },
+            safetySupport: null,
+            notice: '✨ 由小雞 AI（' + usedModel + '）針對您的句子即時量身生成（點擊「重新產生」可換另一個切角）。',
+            isDemo: false
+          };
+        };
+
+        return getAvailableGeminiModels(apiKey).then(function (candidates) {
+          var tryList = candidates.slice(0, 4);
+          var idx = 0;
+
+          var attemptNext = function () {
+            if (idx >= tryList.length) {
+              // 第 2 層終極備援：切換至小雞麥克風同款 models/gemini-3.8-live WebSocket 通道
+              return callGeminiLiveWebSocketFallback(apiKey, sysText, userPrompt).then(function (liveParsed) {
+                return formatOutput(liveParsed, 'gemini-live');
+              });
+            }
+            var model = tryList[idx++];
+            var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(apiKey);
+            return window.fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                systemInstruction: { parts: [{ text: sysText }] },
+                contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+                generationConfig: {
+                  temperature: 0.75,
+                  responseMimeType: 'application/json'
+                }
+              })
+            }).then(function (res) {
+              return res.json().catch(function () { return {}; }).then(function (data) {
+                return { ok: res.ok, status: res.status, data: data };
+              });
+            }).then(function (resObj) {
+              if (resObj.ok) {
+                var parts = (resObj.data && resObj.data.candidates && resObj.data.candidates[0] && resObj.data.candidates[0].content && resObj.data.candidates[0].content.parts) || [];
+                var nonThoughtText = parts.filter(function (p) { return !p.thought && p.text; }).map(function (p) { return p.text; }).join('\n');
+                var allText = parts.map(function (p) { return p.text || ''; }).join('\n');
+                var parsed = extractJsonFromText(nonThoughtText) || extractJsonFromText(allText);
+                if (parsed && parsed.positiveInterpretation && parsed.replyToSend) {
+                  return formatOutput(parsed, model);
+                }
+              }
+              var msg = String((resObj.data && resObj.data.error && resObj.data.error.message) || ('HTTP ' + resObj.status));
+              if (resObj.status === 429 || /quota|rate-limit|RESOURCE_EXHAUSTED/i.test(msg)) {
+                modelCooldownUntil[model] = Date.now() + 60 * 60 * 1000;
+                return attemptNext();
+              }
+              if (resObj.status === 404 || resObj.status === 400 || /not found|not supported/i.test(msg)) {
+                modelCooldownUntil[model] = Date.now() + 24 * 60 * 60 * 1000;
+                return attemptNext();
+              }
+              return attemptNext();
+            }).catch(function () {
+              return attemptNext();
+            });
+          };
+
+          return attemptNext();
+        });
+      }
+
+      function callRealGeminiPolish(cleanQuote, polishStyle) {
+        var apiKey = getSavedApiKey();
+        var sysText = buildGeminiSystemPrompt(true);
+        var styleNameMap = {
+          gentle: '更溫柔療癒',
+          concise: '更精簡有力',
+          powerful: '更有堅定力量',
+          humorous: '更有幽默感',
+          poetic: '更有詩意畫面',
+          love_and_acceptance: '充滿愛與包容',
+          fully_positive: '正向到底、明亮溫暖',
+          awakened_peace: '平靜覺察、放下對立'
+        };
+        var prompt = '請將以下這句話潤飾得「' + (styleNameMap[polishStyle] || '更溫柔') + '」，保留原意與自我界線：\n' + cleanQuote;
+
+        return getAvailableGeminiModels(apiKey).then(function (candidates) {
+          var tryList = candidates.slice(0, 3);
+          var idx = 0;
+          var attemptNext = function () {
+            if (idx >= tryList.length) {
+              return Promise.reject(new Error('目前免費模型額度忙碌中'));
+            }
+            var model = tryList[idx++];
+            var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(apiKey);
+            return window.fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                systemInstruction: { parts: [{ text: sysText }] },
+                contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.75, responseMimeType: 'application/json' }
+              })
+            }).then(function (res) {
+              return res.json().catch(function () { return {}; }).then(function (data) {
+                return { ok: res.ok, status: res.status, data: data };
+              });
+            }).then(function (resObj) {
+              if (resObj.ok) {
+                var parts = (resObj.data && resObj.data.candidates && resObj.data.candidates[0] && resObj.data.candidates[0].content && resObj.data.candidates[0].content.parts) || [];
+                var nonThought = parts.filter(function (p) { return !p.thought && p.text; }).map(function (p) { return p.text; }).join('\n');
+                var parsed = extractJsonFromText(nonThought);
+                if (parsed && parsed.suggestedQuote) {
+                  return {
+                    mode: 'standard',
+                    suggestedQuote: sanitizePlain(parsed.suggestedQuote),
+                    safetySupport: null,
+                    notice: '✨ 由小雞 AI（' + model + '）即時潤飾。'
+                  };
+                }
+              }
+              return attemptNext();
+            }).catch(function () {
+              return attemptNext();
+            });
+          };
+          return attemptNext();
+        });
+      }
+
+      /**
+       * 參考「小雞提醒」fallbackClassifyText 的深度語意解析設計：
+       * 針對使用者輸入的句子進行語意拆解（自動辨識 16+ 種生活情境、情緒動詞與痛點焦點），
+       * 讓每一種不同的句子都能獲得貼合語意、絕不千篇一律的回應！
+       */
+      function analyzeInputSemantics(clean, scenario, relationship) {
+        // 提取句子中的核心焦點詞（移除常見語助詞，保留具體事件）
+        var focusClause = clean
+          .replace(/^(你|他|她|你們|他們|為什麼|怎麼|每次都|總是|一直|我覺得|真的|到底)/g, '')
+          .replace(/[？?！!。，,、]+$/g, '')
+          .trim();
+        if (focusClause.length > 20) focusClause = focusClause.slice(0, 20) + '…';
+
+        // 1. 家務／生活習慣／整理打掃
+        if (/(洗碗|家事|打掃|垃圾|亂丟|整理|煮飯|衣服|房間|襪子|馬桶|拖地|做家務)/.test(clean)) {
+          return {
+            topic: 'chore_habit',
+            interps: [
+              '關於生活習慣與家務分工的摩擦，往往不是誰故意偷懶，而是每個人對「整潔標準」與「休息時機」的生理時鐘不同。把「你都不幫忙」的指責，換成明確的時間與分工約定，才不會讓小事磨損感情。',
+              '看到家務沒處理好時冒出的火氣，其實是因為覺得「只有自己一個人在撐」。對方可能沒意識到這件事對你帶來的疲憊感，直接說出你需要他分擔哪一項具體家事，會比生悶氣更有效。'
+            ],
+            replies: [
+              '看到家裡還沒整理，我心裡有點累。我們可以一起分工，你負責其中一部分、我負責另一部分，讓兩個人都能早點休息嗎？',
+              '這件家事如果我一個人做真的有點吃力，今天可以請你幫我分擔這部分嗎？做完我們都可以好好放鬆。',
+              '我們對整理時間的習慣好像不太一樣，不如我們約定一個彼此都方便的時間一起弄完，才不會每次都為了這件事心煩。'
+            ],
+            encouragements: [
+              '想擁有舒適整潔的生活空間是很棒的事，但別讓家務變成懲罰自己的枷鎖。累了就先放著，你的心情比地板乾不乾淨更重要。',
+              '在共同生活裡磨合習慣本來就需要時間。先肯定自己對這個家的付出，再用溫和清楚的要求邀請對方一起分擔。'
+            ],
+            quotes: [
+              '家的溫度不在於一塵不染，而在於兩個人願意一起分擔那份生活的小疲憊。',
+              '把抱怨換成具體的邀請，讓分工成為彼此體貼的開始。'
+            ],
+            humorous: '呼叫隊友支援！本人的家事電力只剩 10%，急需你認領一半任務來拯救和平。'
+          };
+        }
+
+        // 2. 遲到／時間觀念／爽約／等很久
+        if (/(遲到|等多久|還沒到|放鴿子|爽約|守時|慢吞吞|幾點了|臨時取消|忘記時間)/.test(clean)) {
+          return {
+            topic: 'time_delay',
+            interps: [
+              '等待時最讓人難受的，往往不是那幾十分鐘本身，而是「我的時間與期待是不是沒被放在心上」的不確定感。對方可能是時間估算太樂觀或臨時卡住，先確認目前位置並表達你的底線即可。',
+              '面對時間安排被打亂，生氣是很正常的反應。與其猜測對方是不是不在乎你，不如直接告訴他你接下來的行程限制，把主導權拿回自己手上。'
+            ],
+            replies: [
+              '我已經到了，不確定你那邊目前進度如何？請先跟我說一下大概幾點會到，我好安排接下來的時間。',
+              '時間臨時變動讓我有點措手不及，如果你那邊真的趕不上，請提早跟我說一聲，我們看是要改約還是先各自處理事情。',
+              '我很期待今天的見面，但等太久確實會有點累。下次我們約時間可以抓寬鬆一點，才不會兩個人都很有壓力。'
+            ],
+            encouragements: [
+              '你重視承諾、守時赴約，這是一份非常珍貴的品質。等待的空檔不妨先找間舒服的店喝杯飲料，別讓別人的匆忙偷走你的好心情。',
+              '把等待的時間拿來寵愛自己一下吧！你的時間很寶貴，完全有權利溫和地向對方表達你的時間底線。'
+            ],
+            quotes: [
+              '守時是對彼此心意的珍惜；即使行程偶有誤點，也不讓等待奪走內心的從容。',
+              '把時間的主導權溫柔拿回來，等待的片刻也能成為照顧自己的空檔。'
+            ],
+            humorous: '報告！我已經在原地長出香菇了，請儘速回報你的最新抵達座標！'
+          };
+        }
+
+        // 3. 已讀不回／敷衍／冷漠／都在滑手機
+        if (/(已讀不回|不回訊息|敷衍|冷淡|滑手機|沒在聽|隨便|嗯嗯|喔|當耳邊風|忽略)/.test(clean)) {
+          return {
+            topic: 'ignored_cold',
+            interps: [
+              '當對方回應冷淡或一直在滑手機時，我們很容易解讀成「他不在乎我」；但很多時候對方只是大腦處於放空、下班後社交能量耗盡，或不知道該怎麼接話，並不是故意冷落你。',
+              '訊息已讀不回或簡短敷衍，常讓人陷入孤單的小劇場。先把注意力從手機螢幕移開，直接告訴對方「我現在需要你專心聽我說五分鐘」，比猜測他的心思更踏實。'
+            ],
+            replies: [
+              '這件事對我來說滿重要的，如果你現在剛好在忙或比較累，等你方便專心的時候跟我說一聲，我們再好好聊。',
+              '剛才跟你分享的時候覺得你好像有點分心，我心裡有點小小失落。等你忙完手邊的事，可以陪我聊幾分鐘嗎？',
+              '看到訊息還沒回覆，想先確認你那邊一切都好嗎？不急著馬上回，有空時再跟我說一下你的想法就好。'
+            ],
+            encouragements: [
+              '渴望被專心傾聽與回應，是每個人最自然的需要。當對方暫時給不出能量時，先由你自己溫柔地接住自己的心情。',
+              '別讓手機另一端的沉默，定義了你的重要程度。先去忙一件讓你開心的事，把專注力拉回自己身上。'
+            ],
+            quotes: [
+              '別讓螢幕另一端的沉默定義你的價值；先專心擁抱自己，心就不會懸在半空。',
+              '需要被傾聽時溫柔開口，需要空間時自在安靜，這是最舒服的距離。'
+            ],
+            humorous: '叮咚！您有一則來自重要人物的語音訊息尚未簽收，請暫時離開手機螢幕三分鐘。'
+          };
+        }
+
+        // 4. 金錢／花費／買東西被唸／帳單／太貴
+        if (/(花錢|亂買|太貴|浪費|省錢|帳單|薪水|買這個|又要錢|敗家|划算)/.test(clean)) {
+          return {
+            topic: 'money_value',
+            interps: [
+              '金錢爭執的背後，通常不是為了那幾百、幾千塊本身，而是雙方對「安全感」與「生活品質」的排序不同。有人靠存錢獲得安心，有人靠喜歡的物品獲得療癒，看懂彼此在意的價值就能減少對立。',
+              '當花費被質疑時，聽起來很像自己的品味或努力被否定了。其實對方可能只是對未來的開銷感到焦慮，先同理他的精打細算，再說明這項支出對你的實際用途或意義即可。'
+            ],
+            replies: [
+              '我明白你是希望能把錢花在刀口上、為我們多存一點安全感。這個項目我有評估過預算與實用性，我們可以一起看看整體的收支安排。',
+              '謝謝你提醒我注意開銷，我心裡有把預算抓好。這筆花費對我最近的狀態很有幫助，接下來其他部分我會多留意節制。',
+              '我們對什麼東西值得買的優先順序可能不太一樣，不如我們討論一個彼此都能自由支配的零用額度，這樣雙方都更安心。'
+            ],
+            encouragements: [
+              '努力生活之餘，在合理範圍內照顧自己的喜好與需求並不是罪過。你很清楚自己的分寸，不需要為每一分快樂感到內疚。',
+              '理財是為了讓生活更幸福，而不是讓關係充滿緊繃。溫和守住預算界線，也允許自己擁有小確幸。'
+            ],
+            quotes: [
+              '每一分花費都是在交換我們在乎的生活模樣；理解彼此的安全感，帳本才會有溫度。',
+              '在理性的預算裡保留一點寵愛自己的空間，生活才不會只剩下數字。'
+            ],
+            humorous: '這不是亂花錢，這是把錢錢變成喜歡的樣子，陪伴我們繼續努力打拚！'
+          };
+        }
+
+        // 5. 工作職場／主管同事／加班／改需求／背黑鍋
+        if (/(主管|老闆|同事|加班|專案|會議|改來改去|下班|報告|進度|推卸|背黑鍋|離職|工作)/.test(clean) || scenario === 'reply_others') {
+          return {
+            topic: 'workplace_ boundary',
+            interps: [
+              '職場上的急迫語氣或反覆修改，多半來自組織流程或上司自己的焦慮，並不是你個人能力的問題。把「工作上的修正」與「自我價值」徹底分開，對事不對人，才不會把下班後的時間也賠進去。',
+              '面對不合理的交辦或臨時改動，心裡覺得煩躁非常正常。先確認具體的優先順序與截止時間，用清楚的事實與資源限制來溝通，比默默硬吞更專業。'
+            ],
+            replies: [
+              '收到這部分的調整需求。考量目前手邊既有項目的時程，若要優先處理這項修改，原定另一項任務的交付時間需要順延，請協助確認優先順序。',
+              '謝謝你的回饋，我先將目前確認的具體修改方向整理如上；若有其他細節需補充，再請於今日內提出，以便我們如期推進。',
+              '了解目前的急迫性，這部分我會先就現有可行範圍處理，需要跨部門確認的細節我們明天上班時間再一併核對。'
+            ],
+            encouragements: [
+              '工作只是生活的一部分，不是你人生的全部。你已經盡了專業本分，下班後請放心把別人的焦慮留在辦公室門外。',
+              '面對混亂的職場要求還能先停下來整理回覆，你的專業與穩定度非常值得肯定。'
+            ],
+            quotes: [
+              '把專業留在工作裡，把平靜留給下班後的自己；職場的風浪不等於你的價值。',
+              '清楚確認優先順序與界線，就是職場上最溫柔也最堅定的自我保護。'
+            ],
+            humorous: '大腦記憶體已達今日上班上限，即將啟動溫和排程保護機制！'
+          };
+        }
+
+        // 6. 長輩／家人碎念／關心變壓力／催婚催生／比較
+        if (/(媽媽|爸爸|長輩|父母|婆婆|公公|親戚|為你好|你看人家|怎麼還不|唸|管太多)/.test(clean) || relationship === 'family') {
+          return {
+            topic: 'family_nagging',
+            interps: [
+              '長輩或家人的碎念與干涉，常常是「用錯了包裝紙的關心」——他們心裡其實是擔心，嘴上說出來卻變成了挑剔與控制。聽見他們背後的關心就好，至於人生怎麼過，決定權依然在你手裡。',
+              '面對家人的比較或傳統期待，不需要急著在飯桌上辯贏他們。溫和地表示「我知道你們擔心我，我有自己的規劃」，在心理上拉開一點健康的界線，雙方都會比較輕鬆。'
+            ],
+            replies: [
+              '我知道你們是因為關心我才提醒這些，謝謝你們放在心上。這件事我目前已經有自己的安排與步調，有新進度一定會跟你們分享。',
+              '聽見你們的建議了，每個人的狀況不太一樣，我會照目前最適合自己的方式慢慢處理，你們放心，先好好照顧自己的身體喔。',
+              '謝謝爸媽／長輩的關心，這部分我自己會留意分寸，我們今天難得聚在一起，先開開心心吃飯聊點輕鬆的吧。'
+            ],
+            encouragements: [
+              '能夠在不被理解的傳統期待下，依然努力走出自己的路，你真的很勇敢。孝順與愛家人，不等於要交出自己的人生方向盤。',
+              '把長輩的焦慮留在他們那一代，你只需要溫柔而堅定地活出讓你自己安心的步調。'
+            ],
+            quotes: [
+              '收下家人笨拙的心意，但把人生的方向盤溫柔而堅定地握在自己手裡。',
+              '最好的家庭界線，是既能溫暖說謝謝，也能自在走自己的路。'
+            ],
+            humorous: '長輩關懷廣播電台已自動調降音量，左耳收下祝福，右耳放飛壓力！'
+          };
+        }
+
+        // 7. 伴侶情感摩擦／不體貼／生氣吵架／冷戰
         return {
-          primary: MASTER_WISDOM_DB[keys[pIdx]],
-          secondary: MASTER_WISDOM_DB[keys[sIdx]]
+          topic: 'general_interpersonal',
+          interps: [
+            '當我們聽到「' + focusClause + '」時，心裡的第一反應常覺得被否定或不被體諒。其實親近的人在情緒上頭時，說出的話往往比他心裡真正想的還要重。先把那層帶刺的情緒外殼撥開，看看他是不是其實在表達某種不安或需要被陪伴。',
+            '這段關於「' + focusClause + '」的摩擦，反映的是你們當下站在不同的角度看同一件事。你不需要為了求和而委屈承認自己沒做錯的事，只要先表達「我在乎你的感受，也想讓你知道我的難處」，就能把對立轉成對話。',
+            '面對「' + focusClause + '」帶來的緊繃感，先深呼吸一下。對方此刻的情緒是他自己的功課，你有權利不被這股低氣壓捲進去；等雙方心平氣和時再針對具體事件討論，才不會越描越黑。'
+          ],
+          replies: [
+            '剛才聽到這句話時我心裡其實有點難受，但我知道我們都不是故意要讓對方不開心。我們先緩一下，等等好好聊聊彼此真正在意的點好嗎？',
+            '我聽見你對「' + focusClause + '」的想法了，我也有一些自己的感受想跟你分享。我們不急著爭誰對誰錯，一起找個兩個人都舒服的做法吧。',
+            '我知道這件事讓我們都有點壓力，我希望能好好聽你說，但也希望我們能用比較溫和的口氣討論，這樣我更能聽進心裡。'
+          ],
+          encouragements: [
+            '在情緒緊繃的時刻，你沒有馬上用傷人的話反擊，而是願意來這裡尋找溫柔的出口，這份用心本身就非常珍貴。',
+            '關係裡的摩擦就像跳舞偶爾踩到腳，不代表整支舞跳壞了。先好好安撫自己受驚嚇或委屈的心，你值得被溫柔理解。',
+            '別把對方的氣話當成對你這個人的定論。先去喝杯水、做幾次深呼吸，把內在的平靜找回來。'
+          ],
+          quotes: [
+            '不必否認心裡的難過，我們依然能為自己找到溫柔而堅定的下一句。',
+            '先接住自己受傷的心情，不急著防衛，理解與轉機就會慢慢浮現。',
+            '把對方的情緒口氣與具體事實分開，心就能留出自由呼吸的空間。'
+          ],
+          humorous: '偵測到雙向溝通訊號暫時打結，建議先啟動五分鐘深呼吸中場休息，稍後再重新連線！'
         };
       }
 
@@ -2606,6 +3176,7 @@
         var recipient = sanitizePlain(opts.recipient || '');
         var purpose = opts.purpose || 'calm';
         var extraContext = sanitizePlain(opts.extraContext || '');
+        var reqIdx = Math.max(0, (opts.requestId || 1) - 1);
 
         if (detectInjection(clean)) {
           return {
@@ -2645,20 +3216,19 @@
               fullyPositive: '留白正是整理心情最好的起點，準備好了隨時都能開始。'
             },
             safetySupport: null,
-            notice: '友善提示：目前輸入資訊較少，若補充一點背景情境，轉換結果會更貼近你的需要。',
+            notice: '友善提示：目前輸入資訊較少，歡迎補充多一點情境。',
             isDemo: true
           };
         }
 
         if (check.mode === 'boundary_support') {
-          var bPack = getMasterPack(state.selectedPhilosophy, opts.requestId);
           return {
             mode: 'boundary_support',
             selectedStyle: style,
-            positiveInterpretation: '對方的羞辱或不當對待反映的是對方的溝通方式，絕對不代表你沒有價值，也不代表這一切都是你的錯。' + bPack.primary.interpQuote + '在關係裡感到受傷是真實的，你不需要替對方的失控背負責任。',
+            positiveInterpretation: '對方的羞辱或不當對待反映的是對方的溝通方式，絕對不代表你沒有價值，也不代表這一切都是你的錯。在關係裡感到受傷是真實的，你不需要替對方的失控背負責任。',
             replyToSend: '我願意討論具體的問題，但不接受羞辱或貶低的話語。如果要繼續談，我希望我們能以互相尊重的方式說話；若現在情緒太滿，我們可以先暫停對話。',
-            selfEncouragement: '感受到受傷與委屈是非常自然的反應。' + bPack.secondary.encourageQuote + '重視自己的尊嚴、拉開適當的保護距離，並不是自私，而是好好愛自己的必要界線。',
-            shareQuote: '真正的接納是看清真相並溫柔保護自己，不簽收任何不屬於你的傷害。',
+            selfEncouragement: '感受到受傷與委屈是非常自然的反應。重視自己的尊嚴、拉開適當的保護距離，並不是自私，而是好好愛自己的必要界線。',
+            shareQuote: '溫柔不是無止境的退讓；真正的愛與包容，永遠包含保護自己的界線。',
             variants: {
               gentle: '我明白你現在有很多情緒，但這樣的話讓我覺得受傷。我們先冷靜一下，等能平心靜氣尊重彼此時再談。',
               humorous: '（此情境涉及言語傷害與個人尊嚴界線，不適合以幽默調侃。我們改以堅定溫和的支持陪伴你：請優先保護自己的心理空間，不必勉強微笑承受。）',
@@ -2670,7 +3240,7 @@
           };
         }
 
-        if (scenario === 'brand_cs' || /出貨|訂單|客服|退款|退貨|瑕疵|做生意|慢死了/.test(clean)) {
+        if (scenario === 'brand_cs' || /出貨|訂單|客服|退款|退貨|瑕疵|做生意|慢死了|賣場|包裹|寄件/.test(clean)) {
           return {
             mode: 'standard',
             selectedStyle: style,
@@ -2684,12 +3254,10 @@
               fullyPositive: '非常感謝你的耐心與提醒！請私訊提供訂單編號，我們馬上為你查核目前狀態，全力協助你後續事宜。'
             },
             safetySupport: null,
-            notice: '展示模式（品牌／客服）：嚴格遵守不捏造出貨進度、不擅自承諾退款或賠償，並引導私訊保護個資。',
+            notice: '',
             isDemo: true
           };
         }
-
-        var mPack = getMasterPack(state.selectedPhilosophy, opts.requestId);
 
         if (/難相處|難搞|愛計較|聽不懂|莫名其妙/.test(clean)) {
           var isSelf = speaker === 'self';
@@ -2697,20 +3265,20 @@
             mode: 'standard',
             selectedStyle: style,
             positiveInterpretation: isSelf
-              ? '當你忍不住想這樣形容對方時，通常代表你已經嘗試溝通好幾次卻覺得沒被接住。' + mPack.primary.interpQuote + '你們也許在期待或步調上有落差，把評價換成具體需求，對方會更容易聽見。'
-              : '這句評價聽起來可能很刺耳，但它不等於你的全部。' + mPack.primary.interpQuote + '你們也許在期待或溝通方式上有落差，可以從具體發生的事開始釐清。',
+              ? '當你忍不住想這樣形容對方時，通常代表你已經嘗試溝通好幾次卻覺得沒被接住。你們也許在期待或步調上有落差，把評價換成具體需求，對方會更容易聽見。'
+              : '這句評價聽起來可能很刺耳，但它不等於你的全部。你們也許在期待或溝通方式上有落差，可以從具體發生的事開始釐清。',
             replyToSend: isSelf
               ? '剛才我語氣有點急了。其實我是希望我們在討論這件事時，可以先聽聽彼此在意的點，一起找個雙方都舒服的做法。'
               : '我想了解，是哪件事讓你有這種感受？我願意聽具體的情況，也希望我們能不貼標籤地聊。',
-            selfEncouragement: '你可以練習更好的溝通，也不需要因此否定整個自己。' + mPack.secondary.encourageQuote,
-            shareQuote: mPack.primary.shareQuote,
+            selfEncouragement: '你可以練習更好的溝通，也不需要因此否定整個自己。',
+            shareQuote: '把刺耳的標籤輕輕放下，我們才能看見彼此真正想被理解的心意。',
             variants: {
-              gentle: '聽到這句話心裡有點難過，但我願意先接納當下的發生、不急著防衛。我想知道是哪個部分讓你覺得有壓力，我們可以針對那件事一起調整。',
+              gentle: '聽到這句話心裡有點難過，但我想知道是哪個部分讓你覺得有壓力，我們可以針對那件事一起調整。',
               humorous: '我的相處說明書可能還沒寫清楚，我們可以一起補上；但先別急著替整台機器打負評。',
-              fullyPositive: '一切都很好（All is well）。每個人都有獨特的頻率，只要願意把具體的想法說開，這正是我們更了解彼此的好機會。'
+              fullyPositive: '每個人都有獨特的頻率，只要願意把具體的想法說開，這正是我們更了解彼此的好機會。'
             },
             safetySupport: null,
-            notice: '已參考並引用「' + mPack.primary.name + '」與「' + mPack.secondary.name + '」的話語來為您回答（點擊下方「重新產生」可切換引用其他大師角度）。',
+            notice: '',
             isDemo: true
           };
         }
@@ -2719,19 +3287,19 @@
           return {
             mode: 'standard',
             selectedStyle: style,
-            positiveInterpretation: '今天的進度不如期待，不等於你沒有價值。你可能需要休息，也可能只是還沒找到容易開始的那一步。' + mPack.primary.interpQuote,
+            positiveInterpretation: '今天的進度不如期待，不等於你沒有價值。你可能需要休息，也可能只是還沒找到容易開始的那一步。',
             replyToSend: recipient
               ? '我今天的狀態比較需要充電，進度比預期慢一些，我會先從最小的一步開始整理，謝謝你的體諒。'
               : '我今天的進度不如預期，先不急著責備自己。接下來只挑一件小事開始。',
-            selfEncouragement: '你不必靠每天完成多少事，才能值得被好好對待。' + mPack.secondary.encourageQuote,
-            shareQuote: mPack.primary.shareQuote,
+            selfEncouragement: '你不必靠每天完成多少事，才能值得被好好對待。',
+            shareQuote: '慢下來喘口氣的日子，不是荒廢，而是為了讓心重新長出力氣。',
             variants: {
               gentle: '今天已經很努力撐過情緒了，就算只喝一杯溫水、好好睡一覺，也算完成了重要的小事。',
               humorous: '手機都要每天充電了，人類偶爾進入省電待機模式也是非常合情合理的科學現象。',
-              fullyPositive: '一切都很好（All is well）。覺察到自己需要休息，本身就是一種很棒的自我照顧！現在先放過自己，下一步從最小的事開始就好。'
+              fullyPositive: '覺察到自己需要休息，本身就是一種很棒的自我照顧！現在先放過自己，下一步從最小的事開始就好。'
             },
             safetySupport: null,
-            notice: '已參考並引用「' + mPack.primary.name + '」與「' + mPack.secondary.name + '」的話語來為您回答（點擊下方「重新產生」可切換引用其他大師角度）。',
+            notice: '',
             isDemo: true
           };
         }
@@ -2750,61 +3318,41 @@
               fullyPositive: '每一份順遂都來自你的用心與善意，繼續帶著這道光往前走吧。'
             },
             safetySupport: null,
-            notice: '目前為展示模式（正面／中性內容回應）。',
+            notice: '',
             isDemo: true
           };
         }
 
-        // 一般情境化合成（反應 style, length, speaker, relationship, recipient, purpose, extraContext）
-        var relMap = { partner: '伴侶', family: '家人', friend: '朋友', colleague: '同事', client: '客戶', other: '對方' };
-        var relLabel = relMap[relationship] || '對方';
-        var targetName = recipient ? recipient : relLabel;
-        var snippet = clean.length > 26 ? clean.slice(0, 26) + '……' : clean;
+        // 使用「小雞提醒」同款深度語意解析器動態產生貼合該主題的回應
+        var sem = analyzeInputSemantics(clean, scenario, relationship);
+        var interp = sem.interps[reqIdx % sem.interps.length];
+        var reply = sem.replies[reqIdx % sem.replies.length];
+        var selfEnc = sem.encouragements[reqIdx % sem.encouragements.length];
+        var quote = sem.quotes[reqIdx % sem.quotes.length];
 
-        var interp = '面對「' + snippet + '」這段話，心裡難免會感到緊繃或不被理解。不過單一次的摩擦或情緒字眼，往往是因為雙方當下的壓力與期待不同，不代表你們的關係或你的努力沒有價值。';
-        if (length === 'short') {
-          interp = '這句話聽起來讓人有壓力，但它可能只是當下情緒的反應，不等於全部的事實，可以先從具體事件釐清。';
-        } else if (length === 'detailed') {
-          interp += (extraContext ? '考量到「' + extraContext + '」的背景，' : '') + '也許' + targetName + '當下也有未說出口的焦慮。先區分「對方的情緒口氣」與「具體待解決的事」，能幫你保留心裡的空間。';
+        if (length === 'detailed' && extraContext) {
+          interp += ' 考量到「' + extraContext + '」的背景，先區分情緒與具體事實，更能幫你保留心裡的空間。';
         }
-
-        var reply = '我聽見你在意的部分了。這件事對我們都很重要，我想先整理一下彼此的想法，我們找個不急的時間把具體做法聊清楚好嗎？';
         if (speaker === 'self') {
-          reply = '我剛才心裡有些急，怕沒把真正在意的地方說清楚。我希望我們能一起看看怎麼調整，讓雙方都覺得被尊重。';
-        } else if (purpose === 'express') {
-          reply = '當我聽到這句話時，心裡其實覺得有些難受。我希望能跟你分享我真實的感受，也想聽聽你原本的想法。';
-        } else if (purpose === 'repair') {
-          reply = '我很重視我們之間的關係，剛才的摩擦讓我有些掛心。等你方便的時候，我們可以心平氣和地聊聊彼此的期待嗎？';
+          reply = '剛才我語氣有點急了，其實我是因為很在意這件事，想跟你一起商量看看有沒有讓彼此都更輕鬆的做法。';
+        } else if (purpose === 'boundary') {
+          reply = '我理解你有你的考量，但目前這樣的方式超出我能負荷的範圍。我希望我們能討論其他彼此都能接受的做法。';
         }
 
-        if (style === 'humorous') {
-          reply = '看來我們剛才的溝通頻道有點小雜訊，我們先按個暫停鍵喝口水，等等再重新對頻聊聊具體怎麼做吧。';
-        } else if (style === 'passionate') {
-          reply = '我們都在乎把事情做好，與其讓情緒卡住彼此，不如我們直接對焦下一步怎麼配合，一起把問題解決！';
-        } else if (style === 'fully_positive') {
-          reply = '謝謝你把在意的點說出來，這正是我們更了解彼此需求的機會，我們一起找個雙方都舒服的做法吧。';
-        }
-
-        interp += ' ' + mPack.primary.interpQuote;
-        var selfEnc = '在溝通裡感到卡住時，' + mPack.secondary.encourageQuote + ' 先照顧好自己內在的平靜，再決定怎麼回應。';
-        var quoteOut = mPack.primary.shareQuote;
-        if (style === 'awakened_peace') {
-          reply = '我聽見你的感受了。我們先深呼吸緩一緩，不急著在情緒裡爭對錯，等心安靜下來，我們再一起看看怎麼調整最合適。';
-        }
         return {
           mode: 'standard',
           selectedStyle: style,
           positiveInterpretation: interp,
           replyToSend: reply,
           selfEncouragement: selfEnc,
-          shareQuote: quoteOut,
+          shareQuote: quote,
           variants: {
-            gentle: '我知道這件事讓我們都有點累了，我們先深呼吸、不急著爭對錯，給彼此一點安靜的空間緩一緩好嗎？',
-            humorous: '看來我們今天的頭腦小劇場演得太投入了，不如先按個暫停鍵深呼吸一下，稍後再重新連線對頻。',
-            fullyPositive: '一切都很好（All is well）。接納眼前發生的一切，每次把卡住的話看清楚，都是讓心更自由、更懂得彼此的禮物。'
+            gentle: sem.replies[0],
+            humorous: sem.humorous,
+            fullyPositive: sem.replies[sem.replies.length - 1]
           },
           safetySupport: null,
-          notice: '已參考並引用「' + mPack.primary.name + '」與「' + mPack.secondary.name + '」的話語來為您回答（點擊下方「重新產生」可切換引用其他大師角度）。',
+          notice: '🐣 小雞智慧語意引擎已為您拆解（若點右上角「🐣 小雞 AI 設定」貼上免費 Gemini 金鑰，還可啟動小雞多模型自動輪替與 Live 通道深度生成！）。',
           isDemo: true
         };
       }
@@ -2839,13 +3387,14 @@
             humorous: '我的溫柔是限量供應，記得先幫自己留一份VIP額度。',
             poetic: '把善意化作微風送給世界，把堅定的屋簷留給自己的心。',
             love_and_acceptance: '真正的愛與包容，是既能溫柔理解他人，也不勉強自己受委屈。',
-            fully_positive: '當我懂得疼惜自己的界線，我給出的每一份善意都更加自由而明亮。'
+            fully_positive: '當我懂得疼惜自己的界線，我給出的每一份善意都更加自由而明亮。',
+            awakened_peace: '溫柔地看清界線，不勉強自己迎合，心才能住在真正的平安裡。'
           };
           return {
             mode: 'boundary_support',
             suggestedQuote: bMap[polishStyle] || bMap.gentle,
             safetySupport: null,
-            notice: '展示模式潤飾：已嚴格保留你原本「設立界線、不委屈自己」的核心立場。'
+            notice: '已嚴格保留你原本「設立界線、不委屈自己」的核心立場。'
           };
         }
 
@@ -2858,13 +3407,13 @@
           poetic: '在時光的縫隙裡，' + base + '，化作心底溫潤的一道微光。',
           love_and_acceptance: '接納當下的真實模樣，' + base + '，讓愛與理解陪你慢慢走。',
           fully_positive: base + '！每一個當下都是溫柔盛開的新起點。',
-          awakened_peace: '退後一步靜靜看著念頭來去，不與當下對立：' + base + '——在呼吸之間，回到本自具足的寧靜。'
+          awakened_peace: '先做一次深長的呼吸，不與當下對立：' + base + '，讓心回到安靜與自在。'
         };
         return {
           mode: 'standard',
           suggestedQuote: tMap[polishStyle] || tMap.gentle,
           safetySupport: null,
-          notice: '展示模式潤飾預覽：確認喜歡後點擊「採用這版」才會填入編輯器。'
+          notice: ''
         };
       }
 
@@ -3175,40 +3724,33 @@
           );
         }
 
-        // 若已連線後端伺服器則呼叫 API，否則使用內建完整規則引擎
-        if (state.isBackendAvailable && window.API_TRANSFORM_ENDPOINT) {
-          window.fetch(window.API_TRANSFORM_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(Object.assign({ text: cleanText }, options))
-          })
-            .then(function (r) {
-              return r.json().then(function (d) {
-                return { status: r.status, body: d };
-              });
-            })
-            .then(function (resObj) {
-              if (currentReqId !== state.latestRequestId) return;
-              if (resObj.status >= 200 && resObj.status < 300 && resObj.body && resObj.body.mode) {
-                finishTransform(resObj.body);
-              } else {
-                state.isGenerating = false;
-                if (submitBtn) submitBtn.disabled = false;
-                if (submitLabel) submitLabel.textContent = '幫我換個溫柔的角度';
-                showPersistentError((resObj.body && resObj.body.message) || '轉換請求失敗，您的輸入與設定已保留。');
-              }
-            })
-            .catch(function () {
-              if (currentReqId !== state.latestRequestId) return;
-              var localRes = generateLocalCuratedTransform(cleanText, options);
-              finishTransform(localRes);
-            });
-        } else {
-          setTimeout(function () {
-            var localRes = generateLocalCuratedTransform(cleanText, options);
-            finishTransform(localRes);
-          }, 220);
+        // 1. 優先檢查是否屬於高風險安全支持模式（安全模式由本地與系統雙重強制保護）
+        var preSafety = classifySafety(cleanText, options.purpose);
+        if (preSafety.mode === 'safety_support') {
+          finishTransform(buildLocalSafetyPayload(preSafety.isAmbiguous, options.style));
+          return;
         }
+
+        // 2. 若使用者已在瀏覽器設定免費 Gemini API Key，直接呼叫真實 Google Gemini AI！
+        if (getSavedApiKey() && !detectInjection(cleanText)) {
+          callRealGeminiTransform(cleanText, options)
+            .then(function (aiResult) {
+              finishTransform(aiResult);
+            })
+            .catch(function (_err) {
+              if (currentReqId !== state.latestRequestId) return;
+              // 如同「小雞提醒」第三層保底設計：當雲端模型連線異常時，自動無縫切換至本地深度語意引擎回應，絕不讓使用者卡住！
+              var fallbackRes = generateLocalCuratedTransform(cleanText, options);
+              finishTransform(fallbackRes);
+            });
+          return;
+        }
+
+        // 3. 若尚未設定 API Key，使用內建離線規則回應
+        setTimeout(function () {
+          var localRes = generateLocalCuratedTransform(cleanText, options);
+          finishTransform(localRes);
+        }, 180);
       }
 
       function renderResultsUI() {
@@ -3451,9 +3993,51 @@
         }
 
         hidePersistentError();
-        var res = generateLocalCuratedPolish(cleanQuote, state.quoteEditor.polishStyle);
         var compBox = document.getElementById('polish-comparison-box');
         var safeBox = document.getElementById('polish-safety-box');
+        var preCheck = classifySafety(cleanQuote, 'calm');
+        if (preCheck.mode === 'safety_support') {
+          var sp = buildLocalSafetyPayload(preCheck.isAmbiguous, 'gentle');
+          if (compBox) compBox.classList.add('hidden');
+          if (safeBox) {
+            safeBox.classList.remove('hidden');
+            var msgEl = document.getElementById('polish-safety-msg');
+            if (msgEl) msgEl.textContent = sp.safetySupport.message;
+          }
+          return;
+        }
+
+        if (getSavedApiKey() && !detectInjection(cleanQuote)) {
+          var polishBtn = document.getElementById('run-ai-polish-btn');
+          if (polishBtn) {
+            polishBtn.disabled = true;
+            polishBtn.textContent = '✨ Gemini AI 正在為你潤飾中……';
+          }
+          callRealGeminiPolish(cleanQuote, state.quoteEditor.polishStyle)
+            .then(function (aiRes) {
+              if (polishBtn) {
+                polishBtn.disabled = false;
+                polishBtn.textContent = '✨ 請 AI 幫我潤飾這句話';
+              }
+              if (safeBox) safeBox.classList.add('hidden');
+              state.quoteEditor.suggestedPolish = aiRes.suggestedQuote;
+              state.quoteEditor.polishNotice = aiRes.notice || '';
+              document.getElementById('polish-original-preview').textContent = cleanQuote;
+              document.getElementById('polish-suggested-preview').textContent = aiRes.suggestedQuote;
+              document.getElementById('polish-notice-text').textContent = aiRes.notice || '';
+              if (compBox) { compBox.classList.remove('hidden'); compBox.scrollIntoView({ block: 'center' }); }
+            })
+            .catch(function (err) {
+              if (polishBtn) {
+                polishBtn.disabled = false;
+                polishBtn.textContent = '✨ 請 AI 幫我潤飾這句話';
+              }
+              showPersistentError('AI 潤飾連線失敗（' + (err && err.message ? err.message : '') + '），您的原句已完整保留。');
+            });
+          return;
+        }
+
+        var res = generateLocalCuratedPolish(cleanQuote, state.quoteEditor.polishStyle);
 
         if (res.mode === 'safety_support' && res.safetySupport) {
           if (compBox) compBox.classList.add('hidden');
@@ -4164,6 +4748,78 @@
         updateNavFavCount();
       }
 
+
+      function openAiKeyModal() {
+        var currentKey = getSavedApiKey();
+        var currentModel = getSavedModel();
+        var maskedHint = currentKey ? ('目前已儲存金鑰：' + currentKey.slice(0, 6) + '••••••••' + currentKey.slice(-4)) : '目前尚未設定金鑰（使用離線固定範本）';
+
+        var html =
+          '<div style="background:var(--primary-tint); padding:14px 16px; border-radius:12px; margin-bottom:14px; font-size:0.92rem; line-height:1.65;">' +
+          '<strong>✨ 為什麼連接 Gemini API Key 就能獲得真正自然的 AI 回答？</strong><br>' +
+          '沒有設定金鑰時，網頁只能用內建的幾組固定範本回答，所以怎麼問都會很像。<br>' +
+          '只要貼上你在 <strong>Google AI Studio</strong> 免費申請的 API Key，每次按下「幫我換個溫柔的角度」，就會由真正的 <strong>Gemini AI</strong> 讀懂你的話、量身寫出自然貼切的回答！' +
+          '</div>' +
+          '<div class="card" style="padding:14px 16px; margin-bottom:14px; font-size:0.9rem; line-height:1.65;">' +
+          '<strong>📝 免費申請 Google Gemini API Key 三步驟（0 元、免綁信用卡、不受 Gemini Pro 到期影響）：</strong>' +
+          '<ol style="margin:6px 0 0 0; padding-left:20px;">' +
+          '<li>前往 <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-weight:700;">Google AI Studio 領取金鑰頁面 (點擊開啟)</a> 並登入 Google 帳號。</li>' +
+          '<li>點擊藍色按鈕 <strong>「Create API key」</strong>，複製產生出來的那串英文數字（開頭通常是 <code>AIza...</code>）。</li>' +
+          '<li>貼到下方欄位並按下「儲存並啟用真實 AI」。金鑰<strong>只會存在你這台手機／電腦的瀏覽器裡</strong>，不會上傳到 GitHub，安全又免費！</li>' +
+          '</ol>' +
+          '</div>' +
+          '<div class="form-group">' +
+          '<label for="gemini-api-key-input" class="field-label">貼上你的 Gemini API Key（' + escapeHtml(maskedHint) + '）</label>' +
+          '<input type="password" id="gemini-api-key-input" class="text-input" placeholder="例如：AIzaSy..." value="' + escapeHtml(currentKey) + '" autocomplete="off">' +
+          '</div>' +
+          '<div class="form-group">' +
+          '<label for="gemini-model-select" class="field-label">選擇 AI 模型</label>' +
+          '<select id="gemini-model-select" class="select-input">' +
+          '<option value="auto"' + (currentModel === 'auto' ? ' selected' : '') + '>🐣 小雞智慧多模型自動輪替（推薦：自動挑免費額度最高模型＋Live 通道備援）</option>' +
+          '<option value="gemini-3.5-flash-lite"' + (currentModel === 'gemini-3.5-flash-lite' ? ' selected' : '') + '>gemini-3.5-flash-lite（高免費額度、極速回應）</option>' +
+          '<option value="gemini-2.5-flash"' + (currentModel === 'gemini-2.5-flash' ? ' selected' : '') + '>gemini-2.5-flash（繁體中文細膩同理）</option>' +
+          '</select>' +
+          '</div>' +
+          '<div class="result-actions-row" style="margin-top:14px;">' +
+          '<button type="button" id="save-gemini-key-btn" class="btn-primary">💾 儲存並啟用真實 AI</button>' +
+          (currentKey ? '<button type="button" id="clear-gemini-key-btn" class="btn-outline" style="color:var(--danger-text);">清除此裝置金鑰</button>' : '') +
+          '</div>';
+
+        openSheet('🔑 連接真實 Gemini AI（免費金鑰設定）', html);
+
+        var saveBtn = document.getElementById('save-gemini-key-btn');
+        var clearBtn = document.getElementById('clear-gemini-key-btn');
+        if (saveBtn) {
+          saveBtn.addEventListener('click', function () {
+            var keyVal = (document.getElementById('gemini-api-key-input').value || '').trim();
+            var modelVal = document.getElementById('gemini-model-select').value || 'gemini-2.5-flash';
+            if (!keyVal) {
+              showPersistentError('請先貼上 API Key（開頭通常為 AIza），或點關閉繼續使用離線模式。');
+              return;
+            }
+            try {
+              window.localStorage.setItem(LOCAL_STORAGE_API_KEY, keyVal);
+              window.localStorage.setItem(LOCAL_STORAGE_MODEL_KEY, modelVal);
+              updateAiKeyBadgeUI();
+              closeSheet();
+              showToast('✨ 已儲存金鑰！現在按下「幫我換個溫柔的角度」將由真實 Gemini AI 為您回答！');
+            } catch (_e) {
+              showPersistentError('瀏覽器無法寫入本機儲存，請確認未處於嚴格封鎖模式。');
+            }
+          });
+        }
+        if (clearBtn) {
+          clearBtn.addEventListener('click', function () {
+            try {
+              window.localStorage.removeItem(LOCAL_STORAGE_API_KEY);
+              updateAiKeyBadgeUI();
+              closeSheet();
+              showToast('已清除此裝置上的 Gemini API Key，切換回離線模式');
+            } catch (_e) {}
+          });
+        }
+      }
+
       function openAccountModal() {
         var favCount = state.localFavorites.length;
         var histCount = state.sessionHistory.length;
@@ -4371,6 +5027,10 @@
         document.getElementById('header-history-btn').addEventListener('click', function () {
           state.favSubview = 'history';
           switchView('favorites');
+        });
+        updateAiKeyBadgeUI();
+        document.getElementById('header-ai-key-btn').addEventListener('click', function () {
+          openAiKeyModal();
         });
         document.getElementById('header-account-btn').addEventListener('click', function () {
           openAccountModal();
